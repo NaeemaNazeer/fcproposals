@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>First Chapter — Business Setup Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#06363C;
+    --teal-700:#14443D;
+    --teal-600:#145045;
+    --teal-500:#11674F;
+    --sand-600:#6C5740;
+    --sand-500:#947557;
+    --sand-400:#A58361;
+    --sand-200:#E7DCC9;
+    --paper:#F6F4EE;
+    --surface:#FFFFFF;
+    --line:rgba(6,54,60,0.14);
+    --line-soft:rgba(6,54,60,0.08);
+    --max:1180px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Red Hat Display',system-ui,sans-serif;
+    font-weight:400;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{font-family:'Red Hat Display',system-ui,sans-serif;margin:0;color:var(--ink);}
+  p{margin:0;}
+  a{color:inherit;}
+  ::selection{background:var(--sand-400);color:#fff;}
+
+  /* ---------- editable fields ---------- */
+  .editable{
+    display:inline-block;
+    color:inherit;
+  }
+  .placeholder-text{color:var(--sand-600);}
+
+  /* ---------- top progress bar ---------- */
+  #progress{position:fixed;top:0;left:0;height:3px;background:var(--sand-400);width:0%;z-index:900;transition:width .1s linear;}
+
+  /* ---------- fill-in banner ---------- */
+  .howto{
+    background:var(--ink);color:#fff;font-size:13.5px;
+    display:flex;align-items:center;justify-content:center;gap:14px;
+    padding:9px 20px;text-align:center;position:relative;
+  }
+  .howto b{color:var(--sand-400);}
+  .howto button{
+    background:none;border:1px solid rgba(255,255,255,0.35);color:#fff;
+    border-radius:20px;width:22px;height:22px;line-height:1;cursor:pointer;font-size:13px;
+    position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  }
+  .howto.hidden{display:none;}
+
+  /* ---------- layout shell ---------- */
+  .shell{display:flex;max-width:var(--max);margin:0 auto;align-items:flex-start;}
+  nav.toc{
+    width:230px;flex-shrink:0;position:sticky;top:0;
+    height:100vh;padding:34px 18px 34px 28px;
+    display:flex;flex-direction:column;justify-content:space-between;
+  }
+  .toc-top .brand{display:flex;align-items:center;gap:10px;margin-bottom:36px;}
+  .toc-top .brand .mark-mini{width:26px;height:26px;flex-shrink:0;}
+  .toc-top .brand .wordmark{font-weight:800;font-size:14.5px;letter-spacing:.02em;line-height:1.15;}
+  .toc-top .brand .wordmark span{display:block;color:var(--sand-500);font-weight:500;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;}
+  .toc-list{list-style:none;margin:0;padding:0;border-left:1px solid var(--line);}
+  .toc-list li{margin:0;}
+  .toc-list a{
+    display:block;font-size:13px;font-weight:600;color:var(--sand-600);
+    padding:7px 0 7px 16px;text-decoration:none;border-left:2px solid transparent;margin-left:-1px;
+    transition:color .15s ease,border-color .15s ease;
+  }
+  .toc-list a .n{color:var(--sand-400);font-weight:700;margin-right:7px;}
+  .toc-list a:hover{color:var(--ink);}
+  .toc-list a.active{color:var(--ink);border-left-color:var(--teal-500);}
+  .toc-list a.active .n{color:var(--teal-500);}
+  .toc-actions{display:flex;flex-direction:column;gap:8px;}
+  .btn{
+    font-family:inherit;font-weight:700;font-size:12.5px;letter-spacing:.02em;
+    border-radius:8px;padding:10px 14px;text-align:center;cursor:pointer;
+    border:1px solid var(--line);background:var(--surface);color:var(--ink);
+    text-decoration:none;display:block;transition:transform .12s ease,background .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn.primary{background:var(--teal-600);color:#fff;border-color:var(--teal-600);}
+  .btn.primary:hover{background:var(--teal-500);}
+
+  main{flex:1;min-width:0;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:90px 56px 70px;position:relative;overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .hero-mark{width:96px;height:96px;margin-bottom:34px;}
+  .eyebrow{
+    text-transform:uppercase;letter-spacing:.16em;font-size:12px;font-weight:700;
+    color:var(--sand-600);margin-bottom:16px;display:block;
+  }
+  .hero h1{font-size:clamp(34px,4.6vw,54px);font-weight:800;letter-spacing:-.01em;line-height:1.08;max-width:760px;}
+  .hero h1 em{font-style:normal;color:var(--teal-500);}
+  .hero-sub{margin-top:20px;font-size:17px;color:var(--teal-700);max-width:600px;font-weight:500;line-height:1.6;}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:28px;margin-top:38px;padding-top:26px;border-top:1px solid var(--line);}
+  .hero-meta .item{font-size:13px;}
+  .hero-meta .item label{display:block;text-transform:uppercase;font-size:10.5px;letter-spacing:.1em;color:var(--sand-500);font-weight:700;margin-bottom:5px;}
+  .hero-meta .item .editable{font-weight:700;font-size:14.5px;}
+  .hero-cta{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap;}
+  .hero-cta .btn{padding:12px 20px;}
+
+  /* decorative repeated arcs */
+  .hero::after{
+    content:"";position:absolute;right:-120px;top:-80px;width:420px;height:420px;
+    border-radius:50%;border:60px solid var(--sand-200);opacity:.4;z-index:0;
+  }
+  .hero > *{position:relative;z-index:1;}
+
+  /* ---------- sections ---------- */
+  section.block{padding:64px 56px;border-bottom:1px solid var(--line);scroll-margin-top:20px;}
+  section.block:nth-of-type(even){background:rgba(255,255,255,0.45);}
+  .block-head{display:flex;align-items:baseline;gap:16px;margin-bottom:30px;}
+  .block-num{font-size:14px;font-weight:800;color:var(--sand-400);letter-spacing:.05em;}
+  .block-head h2{font-size:clamp(24px,2.6vw,30px);font-weight:800;letter-spacing:-.01em;}
+  .block-intro{max-width:740px;font-size:16px;color:var(--teal-700);margin-bottom:8px;}
+  .lede{font-size:15.5px;max-width:760px;color:var(--teal-700);}
+  .lede + .lede{margin-top:14px;}
+
+  /* about services list */
+  .about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;margin-top:34px;align-items:start;}
+  .service-pills{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
+  .service-pills li{
+    background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    padding:13px 16px;font-size:14.5px;font-weight:600;color:var(--teal-700);
+    display:flex;align-items:center;gap:10px;
+  }
+  .service-pills li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--teal-500);flex-shrink:0;}
+  .about-card{background:var(--ink);color:#fff;border-radius:16px;padding:28px;}
+  .about-card h3{font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--sand-400);margin-bottom:14px;font-weight:700;}
+  .about-card p{font-size:14.5px;color:rgba(255,255,255,0.86);}
+
+  /* why cards */
+  .why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:30px;}
+  .why-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:12px;
+    padding:20px 22px;cursor:pointer;
+  }
+  .why-card .row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .why-card h4{font-size:16px;font-weight:700;}
+  .why-card .plus{
+    width:24px;height:24px;border-radius:50%;border:1.5px solid var(--sand-500);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--sand-600);
+    font-size:15px;font-weight:700;transition:transform .2s ease,background .2s ease,color .2s ease;
+  }
+  .why-card[aria-expanded="true"] .plus{transform:rotate(45deg);background:var(--teal-600);color:#fff;border-color:var(--teal-600);}
+  .why-card .detail{
+    max-height:0;overflow:hidden;transition:max-height .25s ease,margin-top .25s ease;
+    font-size:14px;color:var(--teal-700);
+  }
+  .why-card[aria-expanded="true"] .detail{max-height:140px;margin-top:12px;}
+
+  /* services table */
+  table{width:100%;border-collapse:collapse;margin-top:8px;}
+  .svc-table th{
+    text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--sand-600);font-weight:700;padding:0 14px 10px;border-bottom:1px solid var(--line);
+  }
+  .svc-table td{padding:16px 14px;border-bottom:1px solid var(--line-soft);font-size:14.5px;vertical-align:top;}
+  .svc-table tr:last-child td{border-bottom:none;}
+  .svc-table td.name{font-weight:700;color:var(--ink);width:26%;}
+  .svc-table td.desc{color:var(--teal-700);width:52%;}
+  .svc-table td.time{white-space:nowrap;}
+  .time-pill{
+    display:inline-block;background:var(--sand-200);color:var(--sand-600);
+    font-weight:700;font-size:12.5px;padding:4px 10px;border-radius:20px;
+  }
+  .table-note{font-size:12.5px;color:var(--sand-600);margin-top:14px;font-style:italic;}
+
+  /* process steps */
+  .process{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:32px;}
+  .step{position:relative;padding:22px 18px 18px;background:var(--surface);border:1px solid var(--line);border-radius:12px;}
+  .step .step-n{
+    width:30px;height:30px;border-radius:50%;background:var(--teal-600);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;margin-bottom:14px;
+  }
+  .step h4{font-size:15px;font-weight:700;margin-bottom:6px;}
+  .step p{font-size:13.5px;color:var(--teal-700);}
+  .process-line{grid-column:1/-1;height:1px;background:var(--line);margin:-6px 0 6px;display:none;}
+
+  /* pricing table */
+  .price-table{margin-top:8px;}
+  .price-table th{
+    text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--sand-600);font-weight:700;padding:0 14px 10px;border-bottom:1px solid var(--line);
+  }
+  .price-table th.num, .price-table td.num{text-align:right;}
+  .price-table td{padding:14px;border-bottom:1px solid var(--line-soft);font-size:14.5px;}
+  .price-table td.item{font-weight:600;}
+  .price-table .editable.price{font-weight:700;color:var(--teal-600);}
+  .price-table tr.total td{border-top:2px solid var(--ink);border-bottom:none;padding-top:18px;font-weight:800;font-size:16px;}
+  .price-table tr.total .num{color:var(--teal-600);font-size:19px;}
+  .calc-hint{font-size:12px;color:var(--sand-600);margin-top:10px;}
+  .terms{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:34px;}
+  .terms .col h4{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--sand-600);margin-bottom:12px;font-weight:700;}
+  .terms ul{margin:0;padding-left:18px;font-size:14px;color:var(--teal-700);}
+  .terms li{margin-bottom:6px;}
+
+  /* next steps */
+  .steps-close{display:flex;flex-direction:column;gap:0;margin-top:28px;}
+  .close-row{display:flex;gap:18px;padding:16px 0;border-bottom:1px solid var(--line-soft);align-items:flex-start;}
+  .close-row:last-child{border-bottom:none;}
+  .close-row .badge{
+    width:28px;height:28px;border-radius:8px;background:var(--sand-200);color:var(--sand-600);
+    font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .close-row h4{font-size:15px;font-weight:700;margin-bottom:3px;}
+  .close-row p{font-size:14px;color:var(--teal-700);}
+
+  .signoff{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:40px;}
+  .sig-box{border:1px solid var(--line);border-radius:12px;padding:22px;background:var(--surface);}
+  .sig-box h4{font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--sand-600);margin-bottom:26px;font-weight:700;}
+  .sig-line{border-bottom:1.5px solid var(--ink);height:34px;margin-bottom:8px;}
+  .sig-cap{font-size:12px;color:var(--sand-600);}
+
+  footer{padding:40px 56px;text-align:center;}
+  footer .mark-mini{width:22px;height:22px;margin:0 auto 12px;}
+  footer .fline{font-size:12.5px;color:var(--sand-600);}
+  footer .fline .editable{color:var(--sand-600);}
+  footer .valid{font-size:11.5px;color:var(--sand-500);margin-top:10px;}
+
+  /* mobile toc toggle */
+  .toc-toggle{display:none;}
+
+  @media (max-width:980px){
+    .shell{flex-direction:column;}
+    nav.toc{
+      position:sticky;top:0;width:100%;height:auto;flex-direction:row;align-items:center;
+      justify-content:space-between;padding:14px 20px;background:var(--paper);
+      border-bottom:1px solid var(--line);z-index:800;
+    }
+    .toc-top{display:flex;align-items:center;}
+    .toc-top .brand{margin-bottom:0;}
+    .toc-list{position:fixed;top:56px;left:0;right:0;background:var(--surface);
+      border-bottom:1px solid var(--line);border-left:none;max-height:0;overflow:hidden;
+      transition:max-height .25s ease;z-index:799;}
+    .toc-list.open{max-height:70vh;overflow-y:auto;}
+    .toc-list a{padding:12px 24px;}
+    .toc-actions{display:none;}
+    .toc-toggle{
+      display:flex;width:36px;height:36px;border-radius:8px;border:1px solid var(--line);
+      background:var(--surface);align-items:center;justify-content:center;cursor:pointer;
+    }
+    .hero,section.block,footer{padding-left:24px;padding-right:24px;}
+    .about-grid,.terms,.signoff{grid-template-columns:1fr;}
+    .why-grid,.process{grid-template-columns:1fr;}
+  }
+
+  @media print{
+    nav.toc,.howto,#progress,.hero-cta,.toc-toggle{display:none !important;}
+    .shell{display:block;max-width:100%;}
+    section.block{break-inside:avoid;padding:26px 6px;}
+    body{background:#fff;}
+    .editable{border-bottom:none;}
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<div class="shell">
+
+  <nav class="toc">
+    <div class="toc-top">
+      <div class="brand">
+        <svg class="mark-mini" viewBox="0 0 100 100" fill="none"><g fill="#06363C"><rect x="6" y="8" width="70" height="11" rx="2"/><rect x="6" y="26" width="70" height="11" rx="2"/><path d="M6 44 h20 v11 h-20 z"/></g><path d="M26 55 A38 38 0 0 1 64 93" stroke="#06363C" stroke-width="11" fill="none"/><path d="M40 62 A22 22 0 0 1 62 84" stroke="#06363C" stroke-width="8" fill="none"/><circle cx="70" cy="90" r="7" fill="#06363C"/></svg>
+        <div class="wordmark">First Chapter<span>Business Consultancy</span></div>
+      </div>
+      <button class="toc-toggle" id="tocToggle" aria-label="Toggle sections">☰</button>
+    </div>
+    <ul class="toc-list" id="tocList">
+      <li><a href="#summary" class="tocLink"><span class="n">01</span>Executive Summary</a></li>
+      <li><a href="#about" class="tocLink"><span class="n">02</span>About Us</a></li>
+      <li><a href="#why" class="tocLink"><span class="n">03</span>Why First Chapter</a></li>
+      <li><a href="#services" class="tocLink"><span class="n">04</span>Proposed Services</a></li>
+      <li><a href="#process" class="tocLink"><span class="n">05</span>Our Process</a></li>
+      <li><a href="#investment" class="tocLink"><span class="n">06</span>Investment</a></li>
+      <li><a href="#next" class="tocLink"><span class="n">07</span>Next Steps</a></li>
+    </ul>
+    <div class="toc-actions">
+      <a href="#next" class="btn primary">Accept proposal</a>
+      <button class="btn" onclick="window.print()">Save / print PDF</button>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <svg class="hero-mark" id="heroMark" viewBox="0 0 100 100" fill="none">
+        <g class="bars">
+          <rect x="6" y="8" width="70" height="11" rx="2" fill="#06363C" class="bar bar1"/>
+          <rect x="6" y="26" width="70" height="11" rx="2" fill="#14443D" class="bar bar2"/>
+          <path d="M6 44 h20 v11 h-20 z" fill="#145045" class="bar bar3"/>
+        </g>
+        <path d="M26 55 A38 38 0 0 1 64 93" stroke="#11674F" stroke-width="11" fill="none" class="arc arc1" pathLength="1"/>
+        <path d="M40 62 A22 22 0 0 1 62 84" stroke="#145045" stroke-width="8" fill="none" class="arc arc2" pathLength="1"/>
+        <circle cx="70" cy="90" r="7" fill="#06363C" class="dot"/>
+      </svg>
+      <span class="eyebrow">Business Setup Proposal</span>
+      <h1>A clear path to opening in <em class="editable" data-field="jurisdiction" data-placeholder="Dubai, UAE">Dubai, UAE</em>.</h1>
+      <p class="hero-sub">Prepared for <span class="editable" data-field="clientName" data-placeholder="[Client Business Name]">[Client Business Name]</span> — the recommended services, timeline and cost structure to get you registered, licensed and operating with confidence.</p>
+      <div class="hero-meta">
+        <div class="item"><label>Prepared for</label><span class="editable" data-field="clientName2" data-placeholder="[Client Business Name]">[Client Business Name]</span></div>
+        <div class="item"><label>Jurisdiction</label><span class="editable" data-field="jurisdiction2" data-placeholder="Dubai, UAE">Dubai, UAE</span></div>
+        <div class="item"><label>Date</label><span class="editable" data-field="propDate" data-placeholder="DD.MM.YYYY">DD.MM.YYYY</span></div>
+        <div class="item"><label>Valid for</label><span class="editable" data-field="validDays" data-placeholder="30 days">30 days</span></div>
+        <div class="item"><label>Prepared by</label><span>First Chapter Consultancy</span></div>
+      </div>
+      <div class="hero-cta">
+        <a href="#investment" class="btn primary">Jump to investment</a>
+        <button class="btn" onclick="window.print()">Save as PDF</button>
+      </div>
+    </section>
+
+    <!-- 01 EXECUTIVE SUMMARY -->
+    <section class="block" id="summary">
+      <div class="block-head"><span class="block-num">01</span><h2>Executive Summary</h2></div>
+      <p class="lede">At First Chapter Consultancy, we specialise in guiding entrepreneurs and businesses through the process of establishing their operations seamlessly. Whether you're starting fresh or expanding into new markets, our comprehensive business setup services ensure you start strong, compliant and ready for success.</p>
+      <p class="lede">This proposal outlines the recommended services, timeline and cost structure to support <span class="editable" data-field="clientName3" data-placeholder="[Client Business Name]">[Client Business Name]</span> in setting up operations efficiently in <span class="editable" data-field="jurisdiction3" data-placeholder="Dubai, UAE">Dubai, UAE</span>.</p>
+    </section>
+
+    <!-- 02 ABOUT -->
+    <section class="block" id="about">
+      <div class="block-head"><span class="block-num">02</span><h2>About First Chapter Consultancy</h2></div>
+      <div class="about-grid">
+        <div>
+          <p class="lede">First Chapter is a business consultancy built around one idea: growth needs clarity and confidence, not paperwork and guesswork. We guide founders through every critical step of formation — reading the market, defining the right structure, and executing with precision.</p>
+          <p class="lede" style="margin-top:14px;">With deep expertise in local and international business laws, procedures and regulatory frameworks, we simplify company formation from start to finish, aligning purpose with progress and turning ambition into a business that's actually open.</p>
+        </div>
+        <div class="about-card">
+          <h3>Our services include</h3>
+          <ul class="service-pills">
+            <li>Mainland, Free Zone &amp; Offshore Company Formation</li>
+            <li>Trade License Registration</li>
+            <li>PRO &amp; Government Liaison Services</li>
+            <li>Bank Account Opening Assistance</li>
+            <li>Visa Processing</li>
+            <li>Business Strategy &amp; Compliance Support</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 WHY -->
+    <section class="block" id="why">
+      <div class="block-head"><span class="block-num">03</span><h2>Why First Chapter</h2></div>
+      <p class="block-intro">Four things clients tell us matter most once they've actually gone through setup. Tap any card for the detail.</p>
+      <div class="why-grid" id="whyGrid">
+        <div class="why-card" aria-expanded="false">
+          <div class="row"><h4>One point of contact</h4><span class="plus">+</span></div>
+          <div class="detail">A single consultant manages your file end to end — you're not re-explaining your business to a different person at every stage.</div>
+        </div>
+        <div class="why-card" aria-expanded="false">
+          <div class="row"><h4>Straight timelines</h4><span class="plus">+</span></div>
+          <div class="detail">You get a real week-by-week estimate up front, with each stage's expected turnaround, not an open-ended "soon."</div>
+        </div>
+        <div class="why-card" aria-expanded="false">
+          <div class="row"><h4>Handled in-house</h4><span class="plus">+</span></div>
+          <div class="detail">PRO and government liaison work is done by our own team, not passed to a third party we don't control.</div>
+        </div>
+        <div class="why-card" aria-expanded="false">
+          <div class="row"><h4>We'll say if free zone is wrong</h4><span class="plus">+</span></div>
+          <div class="detail">Structure recommendations are based on your business and goals — not on which package happens to pay us more.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 SERVICES -->
+    <section class="block" id="services">
+      <div class="block-head"><span class="block-num">04</span><h2>Proposed Services</h2></div>
+      <p class="block-intro">For: <span class="editable" data-field="clientType" data-placeholder="[Client Business Name]">[Client Business Name]</span></p>
+      <table class="svc-table">
+        <thead><tr><th>Service</th><th>Description</th><th>Timeline</th></tr></thead>
+        <tbody>
+          <tr><td class="name">Business Structure Advisory</td><td class="desc">Choosing the most suitable business structure (LLC, Free Zone, etc.)</td><td class="time"><span class="time-pill">1 Day</span></td></tr>
+          <tr><td class="name">Company Registration</td><td class="desc">Handling all registration paperwork and approvals</td><td class="time"><span class="time-pill">3–7 Days</span></td></tr>
+          <tr><td class="name">Trade License Application</td><td class="desc">Application and coordination with relevant authorities</td><td class="time"><span class="time-pill">3–5 Days</span></td></tr>
+          <tr><td class="name">PRO Services</td><td class="desc">Government interactions, approvals &amp; renewals</td><td class="time"><span class="time-pill">Ongoing</span></td></tr>
+          <tr><td class="name">Bank Account Opening Support</td><td class="desc">Assistance with documentation and scheduling</td><td class="time"><span class="time-pill">5–10 Days</span></td></tr>
+          <tr><td class="name">Visa Processing</td><td class="desc">Investor, Partner and Employee Visas</td><td class="time"><span class="time-pill">7–14 Days</span></td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">Timelines may vary depending on jurisdiction and document availability.</p>
+    </section>
+
+    <!-- 05 PROCESS -->
+    <section class="block" id="process">
+      <div class="block-head"><span class="block-num">05</span><h2>Our Process</h2></div>
+      <p class="block-intro">How the services above come together, in order.</p>
+      <div class="process">
+        <div class="step"><div class="step-n">1</div><h4>Discovery call</h4><p>We learn about the business, goals and preferred jurisdiction.</p></div>
+        <div class="step"><div class="step-n">2</div><h4>Structure &amp; documentation</h4><p>We recommend the right setup and prepare the required paperwork.</p></div>
+        <div class="step"><div class="step-n">3</div><h4>Registration &amp; licensing</h4><p>We handle submissions, approvals and liaison with authorities.</p></div>
+        <div class="step"><div class="step-n">4</div><h4>Bank account &amp; visas</h4><p>We support account opening and visa processing so you're ready to operate.</p></div>
+      </div>
+    </section>
+
+    <!-- 06 INVESTMENT -->
+    <section class="block" id="investment">
+      <div class="block-head"><span class="block-num">06</span><h2>Investment &amp; Pricing</h2></div>
+      <table class="price-table">
+        <thead><tr><th>Service</th><th class="num">Price (AED)</th></tr></thead>
+        <tbody id="priceBody">
+          <tr><td class="item">Company Registration</td><td class="num"><span class="editable price" data-price="1" data-placeholder="Insert Price">Insert Price</span></td></tr>
+          <tr><td class="item">Trade License</td><td class="num"><span class="editable price" data-price="1" data-placeholder="Insert Price">Insert Price</span></td></tr>
+          <tr><td class="item">PRO Services</td><td class="num"><span class="editable price" data-price="1" data-placeholder="Insert Price">Insert Price</span></td></tr>
+          <tr><td class="item">Bank Account Support</td><td class="num"><span class="editable price" data-price="1" data-placeholder="Insert Price">Insert Price</span></td></tr>
+          <tr><td class="item">Visa Processing</td><td class="num"><span class="editable price" data-price="1" data-placeholder="Insert Price">Insert Price</span></td></tr>
+          <tr class="total"><td class="item">Total Investment</td><td class="num"><span id="totalPrice">AED 0</span></td></tr>
+        </tbody>
+      </table>
+      <p class="calc-hint">Total updates automatically as you fill in prices above. All prices are inclusive of government fees unless stated otherwise.</p>
+
+      <div class="terms">
+        <div class="col">
+          <h4>Payment Terms</h4>
+          <ul>
+            <li>Advance payment of <span class="editable" data-field="advancePct" data-placeholder="[X]%">[X]%</span> required upon signing</li>
+            <li>No credit facility available</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h4>Proposal Validity</h4>
+          <ul>
+            <li>This proposal is valid for <span class="editable" data-field="validDays2" data-placeholder="30 days">30 days</span> from the date above</li>
+            <li>Government fees are subject to change by the relevant authority</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 NEXT STEPS -->
+    <section class="block" id="next">
+      <div class="block-head"><span class="block-num">07</span><h2>Next Steps</h2></div>
+      <div class="steps-close">
+        <div class="close-row"><div class="badge">1</div><div><h4>Review this proposal</h4><p>Read through the scope, timeline and investment above.</p></div></div>
+        <div class="close-row"><div class="badge">2</div><div><h4>Confirm scope on a short call</h4><p>We'll answer questions and lock the final structure and jurisdiction.</p></div></div>
+        <div class="close-row"><div class="badge">3</div><div><h4>Sign &amp; pay the advance</h4><p>Countersign below and process the advance payment to begin.</p></div></div>
+        <div class="close-row"><div class="badge">4</div><div><h4>Week one begins</h4><p>Business structure advisory starts the next working day.</p></div></div>
+      </div>
+
+      <div class="signoff">
+        <div class="sig-box">
+          <h4>For <span class="editable" data-field="clientName4" data-placeholder="[Client Business Name]">[Client Business Name]</span></h4>
+          <div class="sig-line"></div>
+          <p class="sig-cap">Signature and date</p>
+        </div>
+        <div class="sig-box">
+          <h4>For First Chapter Consultancy</h4>
+          <div class="sig-line"></div>
+          <p class="sig-cap">Signature and date</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <svg class="mark-mini" viewBox="0 0 100 100" fill="none"><g fill="#06363C"><rect x="6" y="8" width="70" height="11" rx="2"/><rect x="6" y="26" width="70" height="11" rx="2"/><path d="M6 44 h20 v11 h-20 z"/></g><path d="M26 55 A38 38 0 0 1 64 93" stroke="#06363C" stroke-width="11" fill="none"/><path d="M40 62 A22 22 0 0 1 62 84" stroke="#06363C" stroke-width="8" fill="none"/><circle cx="70" cy="90" r="7" fill="#06363C"/></svg>
+      <p class="fline">First Chapter Consultancy — <span class="editable" data-field="contactEmail" data-placeholder="hello@firstchapter.ae">hello@firstchapter.ae</span> · <span class="editable" data-field="contactPhone" data-placeholder="+971 XX XXX XXXX">+971 XX XXX XXXX</span></p>
+      <p class="valid">Questions on this proposal? Reply directly or call the number above.</p>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // ---- live pricing total ----
+  const priceEls = Array.from(document.querySelectorAll('.editable.price'));
+  const totalEl = document.getElementById('totalPrice');
+  function recalcTotal(){
+    let sum = 0, hasNumeric = false;
+    priceEls.forEach(el=>{
+      const digits = el.textContent.replace(/[^0-9.]/g,'');
+      if(digits){ sum += parseFloat(digits) || 0; hasNumeric = true; }
+    });
+    totalEl.textContent = hasNumeric ? 'AED ' + sum.toLocaleString('en-US',{maximumFractionDigits:0}) : 'AED 0';
+  }
+  recalcTotal(); // computed once from the prices typed into this file
+
+  // ---- why-card accordion ----
+  document.querySelectorAll('.why-card').forEach(card=>{
+    card.addEventListener('click', ()=>{
+      const open = card.getAttribute('aria-expanded')==='true';
+      card.setAttribute('aria-expanded', open ? 'false':'true');
+    });
+  });
+
+  // ---- scroll spy ----
+  const links = document.querySelectorAll('.tocLink');
+  const sections = Array.from(links).map(l=>document.querySelector(l.getAttribute('href')));
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        const id = '#'+entry.target.id;
+        links.forEach(l=>l.classList.toggle('active', l.getAttribute('href')===id));
+      }
+    });
+  }, {rootMargin:'-40% 0px -50% 0px'});
+  sections.forEach(s=> s && io.observe(s));
+
+  // ---- progress bar ----
+  window.addEventListener('scroll', ()=>{
+    const h = document.documentElement;
+    const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    document.getElementById('progress').style.width = pct + '%';
+  });
+
+  // ---- mobile toc toggle ----
+  const tocToggle = document.getElementById('tocToggle');
+  const tocList = document.getElementById('tocList');
+  if(tocToggle){
+    tocToggle.addEventListener('click', ()=> tocList.classList.toggle('open'));
+    links.forEach(l=> l.addEventListener('click', ()=> tocList.classList.remove('open')));
+  }
+
+  // ---- hero mark assemble-in animation ----
+  window.addEventListener('DOMContentLoaded', ()=>{
+    const mark = document.getElementById('heroMark');
+    mark.classList.add('ready');
+  });
+</script>
+
+<style>
+  #heroMark .bar,#heroMark .arc,#heroMark .dot{opacity:0;}
+  #heroMark.ready .bar{animation:barIn .5s cubic-bezier(.2,.8,.2,1) forwards;}
+  #heroMark.ready .bar1{animation-delay:.05s;}
+  #heroMark.ready .bar2{animation-delay:.16s;}
+  #heroMark.ready .bar3{animation-delay:.27s;}
+  #heroMark.ready .arc{animation:arcIn .6s ease forwards;}
+  #heroMark.ready .arc1{animation-delay:.4s;}
+  #heroMark.ready .arc2{animation-delay:.52s;}
+  #heroMark.ready .dot{animation:dotIn .4s cubic-bezier(.34,1.56,.64,1) forwards;animation-delay:.75s;}
+  @keyframes barIn{from{opacity:0;transform:scaleX(0);transform-origin:left;}to{opacity:1;transform:scaleX(1);}}
+  @keyframes arcIn{from{opacity:0;stroke-dashoffset:1;}to{opacity:1;stroke-dashoffset:0;}}
+  @keyframes dotIn{from{opacity:0;transform:scale(0);}to{opacity:1;transform:scale(1);}}
+  #heroMark .arc{stroke-dasharray:1;stroke-dashoffset:1;}
+  @media (prefers-reduced-motion: reduce){
+    #heroMark .bar,#heroMark .arc,#heroMark .dot{opacity:1 !important;animation:none !important;transform:none !important;stroke-dashoffset:0 !important;}
+  }
+</style>
+
+</body>
+</html>
